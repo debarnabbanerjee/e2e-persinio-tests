@@ -18,11 +18,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class payrollTests {
-    loginPage lPage;
-    homePage hmePage;
-    payrollLandingPage payrollPage;
-    WebDriver driver;
-    WebElement element;
+    private loginPage lPage;
+    private homePage hmePage;
+    private payrollLandingPage payrollPage;
+    private WebDriver driver;
+    private WebElement element;
+    private String initialCount;
 
     @BeforeTest
     public void setUp() {
@@ -97,20 +98,25 @@ public class payrollTests {
         Assert.assertTrue(e2eUtils.returnElement("//*[contains(text(),'Close payroll')]/../..").getAttribute("class").contains("disabled"));
     }
 
-    @Description("Validate that exports can be generated and deleted")
+    @Description("Validate that exports can be generated")
     @Test(priority = 7)
-    public void verifyThatExportsCanBeGeneratedAndDeleted() {
-        String intialCount = payrollPage.noOfExportsGenerated();
+    public void verifyThatExportsCanBeGenerated() {
+        initialCount = payrollPage.noOfExportsGenerated();
         payrollPage.generateExports();
-        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", String.valueOf(Integer.valueOf(intialCount) + 1));
-        Assert.assertTrue(Integer.valueOf(payrollPage.noOfExportsGenerated()) == (Integer.valueOf(intialCount)) + 1);
+        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", String.valueOf(Integer.valueOf(initialCount) + 1));
+        Assert.assertTrue(Integer.valueOf(payrollPage.noOfExportsGenerated()) == (Integer.valueOf(initialCount)) + 1);
+    }
+
+    @Description("Validate that exports can be deleted")
+    @Test(priority = 8)
+    public void verifyThatExportsCanBeDeleted() {
         payrollPage.deleteGeneratedExports();
-        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", intialCount);
-        Assert.assertTrue(payrollPage.noOfExportsGenerated().equalsIgnoreCase(intialCount));
+        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", initialCount);
+        Assert.assertTrue(payrollPage.noOfExportsGenerated().equalsIgnoreCase(initialCount));
     }
 
     @Description("Validate the different month and year in past and future can be selected from Payroll Page")
-    @Test(priority = 8, dataProvider = "monthYearDataProvider")
+    @Test(priority = 9, dataProvider = "monthYearDataProvider")
     public void validateThatDifferentMonthAndYearCanBeSelected(String month, String year) {
         payrollPage.selectMonthAndYear(month, year);
         e2eUtils.waitForElementToHaveText(payrollPage.monthInPageLocator, month);
@@ -118,7 +124,7 @@ public class payrollTests {
     }
 
     @Description("Validate the a warning message is displayed when trying to close a payroll in future period")
-    @Test(priority = 9)
+    @Test(priority = 10)
     public void validatePayrollClosureWarningMessage() {
         String warningMessage = "Warning, you are trying to close a payroll before the end of the billing period. This is possible, but be aware that attendance and absence data will be incomplete.";
         payrollPage.selectMonthAndYear("December", "2022");
