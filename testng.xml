@@ -1,0 +1,7 @@
+<suite name="personio e2e tests">
+    <test name="testngTest">
+        <classes>
+            <class name="com.personio.test.tests.payrollTests" />
+        </classes>
+    </test>
+</suite>
