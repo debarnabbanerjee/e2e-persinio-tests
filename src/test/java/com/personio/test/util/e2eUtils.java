@@ -1,18 +1,25 @@
 package com.personio.test.util;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileSystemUtils;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestNGMethod;
+import org.testng.Reporter;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class e2eUtils {
@@ -20,6 +27,7 @@ public class e2eUtils {
     static private WebDriver driver;
     private static RemoteWebDriver remoteWebDriver;
     private static DesiredCapabilities desiredCapabilities;
+
 
     public static WebDriver openBrowser(String browserType) {
         if (System.getProperty("os.name").contains("Windows")) {
@@ -115,5 +123,17 @@ public class e2eUtils {
     public static void moveMouseAndClick(WebElement element) {
         Actions actions = new Actions(driver);
         actions.moveToElement(element).click().build().perform();
+    }
+
+    public static void takeSceenshot(){
+        try{
+            File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            File screenshotName = new File(System.getProperty("user.dir")+"//Screenshots//"+
+                    driver.getTitle() +new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date())+".png");
+            FileUtils.copyFile(srcFile,screenshotName);
+            Reporter.log("<br><img src='"+screenshotName+"' height='400' width ='400'/><br>");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
