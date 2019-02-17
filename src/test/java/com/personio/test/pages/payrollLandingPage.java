@@ -73,7 +73,7 @@ public class payrollLandingPage {
     WebElement doneButton;
 
     @FindBy(xpath = "//i[@class='fal fa-trash']")
-    WebElement deleteGeneratedExports ;
+    WebElement deleteGeneratedExports;
 
     @FindBy(xpath = "//*[contains(text(),'Confirm to overwrite export')]")
     WebElement overwriteExportLabel;
@@ -87,9 +87,9 @@ public class payrollLandingPage {
     @FindBy(xpath = "//i[@class='far fa-calendar-alt']")
     WebElement calendarPicker;
 
-    public String monthInPageLocator ="//div[@class='uhMEN']//strong[1]";
+    public String monthInPageLocator = "//div[@class='uhMEN']//strong[1]";
 
-    public String yearInPageLocator ="//div[@class='uhMEN']//strong[2]";
+    public String yearInPageLocator = "//div[@class='uhMEN']//strong[2]";
 
     @FindBy(xpath = "//div[@class='datepicker-months']/table[@class='table-condensed']//th[@class='prev']")
     WebElement prevYearButton;
@@ -97,8 +97,8 @@ public class payrollLandingPage {
     @FindBy(xpath = "//div[@class='datepicker-months']/table[@class='table-condensed']//th[@class='next']")
     WebElement nextYearButton;
 
-    public boolean validatePayrollLandingPageUI(){
-        try{
+    public boolean validatePayrollLandingPageUI() {
+        try {
             e2eUtils.waitForElementToBePresentOnScreen(searchField);
             e2eUtils.waitForElementToBePresentOnScreen(personalDataLink);
             e2eUtils.waitForElementToBePresentOnScreen(salaryDataLink);
@@ -114,36 +114,36 @@ public class payrollLandingPage {
             e2eUtils.waitForElementToBePresentOnScreen(officeLocationColHeader);
             e2eUtils.waitForElementToBePresentOnScreen(noOfExportsGenerated);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public void clickSalaryData(){
+    public void clickSalaryData() {
         e2eUtils.click(salaryDataLink);
         e2eUtils.waitForElementToBePresentOnScreen(salaryContainer);
     }
 
-    public ArrayList<String> getAllSalaries(){
+    public ArrayList<String> getAllSalaries() {
         ArrayList<String> list = new ArrayList<String>();
         List<WebElement> elements = driver.findElements(By.xpath("(/html/body//table)[2]//tbody/tr[*]/td[3]"));
-        for(int i = 0;i<elements.size();i++){
-            list.add(elements.get(i).getText().replace("€","").trim());
+        for (int i = 0; i < elements.size(); i++) {
+            list.add(elements.get(i).getText().replace("€", "").trim());
         }
         return list;
     }
 
-    public ArrayList<String> getAllCurrencies(){
+    public ArrayList<String> getAllCurrencies() {
         ArrayList<String> list = new ArrayList<String>();
         List<WebElement> elements = driver.findElements(By.xpath("(/html/body//table)[2]//tbody/tr[*]/td[6]"));
-        for(int i = 0;i<elements.size();i++){
+        for (int i = 0; i < elements.size(); i++) {
             list.add(elements.get(i).getText().trim());
         }
         return list;
     }
 
-    public void generateExports(){
+    public void generateExports() {
         e2eUtils.click(generateExport);
         e2eUtils.waitForElementToBePresentOnScreen(generatedExportsLabel);
         e2eUtils.click(doneButton);
@@ -151,36 +151,36 @@ public class payrollLandingPage {
         e2eUtils.waitForElementToBePresentOnScreen(noOfExportsGenerated);
     }
 
-    public void deleteGeneratedExports(){
+    public void deleteGeneratedExports() {
         e2eUtils.click(noOfExportsGenerated);
         e2eUtils.waitForElementToBePresentOnScreen(deleteGeneratedExports);
         List<WebElement> elements = driver.findElements(By.xpath("//i[@class='fal fa-trash']"));
-        e2eUtils.moveMouseAndClick(elements.get(elements.size()-1));
+        e2eUtils.moveMouseAndClick(elements.get(elements.size() - 1));
         e2eUtils.click(doneButton);
         e2eUtils.refreshPage();
     }
 
-    public String noOfExportsGenerated(){
+    public String noOfExportsGenerated() {
         e2eUtils.waitForElementToBePresentOnScreen(noOfExportsGenerated);
         return noOfExportsGenerated.getText().trim();
     }
 
-    public void selectMonthAndYear(String monthPassed, String yearPassed){
+    public void selectMonthAndYear(String monthPassed, String yearPassed) {
         e2eUtils.click(calendarPicker);
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        if(Integer.valueOf(yearPassed)>currentYear){
+        if (Integer.valueOf(yearPassed) > currentYear) {
             e2eUtils.click(nextYearButton);
-        }else if(Integer.valueOf(yearPassed)<currentYear){
+        } else if (Integer.valueOf(yearPassed) < currentYear) {
             e2eUtils.click(prevYearButton);
         }
-        e2eUtils.click(driver.findElement(By.xpath("//div[@class='datepicker-months']//tbody//td/span[contains(text(),'"+monthPassed.trim().substring(0,3)+"')]")));
+        e2eUtils.click(driver.findElement(By.xpath("//div[@class='datepicker-months']//tbody//td/span[contains(text(),'" + monthPassed.trim().substring(0, 3) + "')]")));
     }
 
-    public void closePayroll(){
+    public void closePayroll() {
         e2eUtils.click(closePayrollButton);
     }
 
-    public void overwriteExports(){
+    public void overwriteExports() {
         e2eUtils.click(doneButton);
     }
 }

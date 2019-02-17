@@ -10,23 +10,23 @@ public class loginPage {
 
     WebDriver driver;
 
-    @FindBy(id="email")
+    @FindBy(id = "email")
     WebElement emailField;
 
-    @FindBy(id="password")
+    @FindBy(id = "password")
     WebElement password;
 
-    @FindBy(xpath="//*[contains(text(),'Einloggen')]")
+    @FindBy(xpath = "//*[contains(text(),'Einloggen')]")
     WebElement loginBtn;
 
-    public loginPage(WebDriver driver){
+    public loginPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    public void doLogin(String username, String psswrd){
-        e2eUtils.writeText(emailField,username);
-        e2eUtils.writeText(password,psswrd);
+    public void doLogin(String username, String psswrd) {
+        e2eUtils.writeText(emailField, username);
+        e2eUtils.writeText(password, psswrd);
         e2eUtils.click(loginBtn);
     }
 }

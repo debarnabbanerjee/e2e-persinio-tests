@@ -90,14 +90,14 @@ public class payrollTests {
     public void verifyThatExportsCanBeGeneratedAndDeleted() {
         String intialCount = payrollPage.noOfExportsGenerated();
         payrollPage.generateExports();
-        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span",String.valueOf(Integer.valueOf(intialCount) + 1));
+        e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", String.valueOf(Integer.valueOf(intialCount) + 1));
         Assert.assertTrue(Integer.valueOf(payrollPage.noOfExportsGenerated()) == (Integer.valueOf(intialCount)) + 1);
         payrollPage.deleteGeneratedExports();
         e2eUtils.waitForElementToHaveText("//button[@id='exported-files-button']//span", intialCount);
         Assert.assertTrue(payrollPage.noOfExportsGenerated().equalsIgnoreCase(intialCount));
     }
 
-    @Test(priority = 8,dataProvider="monthYearDataProvider")
+    @Test(priority = 8, dataProvider = "monthYearDataProvider")
     public void validateThatDifferentMonthAndYearCanBeSelected(String month, String year) {
         payrollPage.selectMonthAndYear(month, year);
         e2eUtils.waitForElementToHaveText(payrollPage.monthInPageLocator, month);
@@ -111,7 +111,7 @@ public class payrollTests {
         e2eUtils.waitForElementToHaveText(payrollPage.monthInPageLocator, "December");
         e2eUtils.waitForElementToHaveText(payrollPage.yearInPageLocator, "2022");
         payrollPage.closePayroll();
-        Assert.assertTrue(driver.findElement((By.xpath("//*[contains(text(),'"+warningMessage+"')]"))).isDisplayed());
+        Assert.assertTrue(driver.findElement((By.xpath("//*[contains(text(),'" + warningMessage + "')]"))).isDisplayed());
     }
 
     @DataProvider(name = "monthYearDataProvider")

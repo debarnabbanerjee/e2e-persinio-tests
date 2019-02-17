@@ -40,7 +40,7 @@ public class homePage {
         }
     }
 
-    public void openPayRollPage(){
+    public void openPayRollPage() {
         e2eUtils.click(payrollSideMenu);
     }
 }
