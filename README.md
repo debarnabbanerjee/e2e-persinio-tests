@@ -11,3 +11,10 @@ JDK needs to be installed
 # Execution Steps
 
 mvn clean verify
+
+# Maven sure file execution Reporting
+Maven Sure fire reports are generated inside target/surefire-reports folder
+
+# Allure Reporting
+Allure installtion instructions are present here https://docs.qameta.io/allure/#_installing_a_commandline
+allure serve target/allure-results

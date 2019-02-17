@@ -3,15 +3,14 @@ package com.personio.test.tests;
 import com.personio.test.pages.homePage;
 import com.personio.test.pages.loginPage;
 import com.personio.test.pages.payrollLandingPage;
+import io.qameta.allure.Description;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
 import com.personio.test.util.e2eUtils;
 
 import java.net.Inet4Address;
@@ -31,11 +30,18 @@ public class payrollTests {
         e2eUtils.navigateToUrl("https://candidate-at-personio-debarnab-banerjee.personio.de");
     }
 
-    @AfterTest
+    @AfterTest(alwaysRun = true)
     public void tearDown() {
         e2eUtils.closeBrowser();
     }
 
+    @AfterMethod(alwaysRun = true)
+    public void afterMethod(ITestResult result) throws Exception {
+        if (!result.isSuccess())
+            e2eUtils.takeSceenshot();
+    }
+
+    @Description("Positive Login Test")
     @Test(priority = 1)
     public void loginTest() {
         lPage = new loginPage(driver);
@@ -48,11 +54,13 @@ public class payrollTests {
         }
     }
 
+    @Description("Validate the UI Elements present in Home Page")
     @Test(priority = 2, dependsOnMethods = "loginTest")
     public void validateUIElementsOfHomePage() {
         Assert.assertTrue(hmePage.validateUIELementsAreDisplayed());
     }
 
+    @Description("Validate the UI Elements present in Payroll Landing Page")
     @Test(priority = 3, dependsOnMethods = "loginTest")
     public void verifyUIELementsofPayrollLandingPage() {
         e2eUtils.makeBrowserSleep(2);
@@ -64,6 +72,7 @@ public class payrollTests {
         Assert.assertTrue(payrollPage.validatePayrollLandingPageUI());
     }
 
+    @Description("Validate the Salary Amounts displayed are not zero")
     @Test(priority = 4)
     public void verifyThatSalaryAmountIsNot0() {
         payrollPage.clickSalaryData();
@@ -72,6 +81,7 @@ public class payrollTests {
         Assert.assertTrue(Double.valueOf(allSalaries.get(0)) > 0.00);
     }
 
+    @Description("Validate that currency displayed for salarie is EUR")
     @Test(priority = 5)
     public void verifyThatCurrencyIsNotNull() {
         ArrayList<String> allCurrencies = payrollPage.getAllCurrencies();
@@ -80,12 +90,14 @@ public class payrollTests {
         }
     }
 
+    @Description("Validate that payroll can't be closed with out generating exports")
     @Test(priority = 6)
     public void verifyThatPayrollCantBeClosedWithoutGeneratingExports() {
         // verify that payroll button is disabled
         Assert.assertTrue(e2eUtils.returnElement("//*[contains(text(),'Close payroll')]/../..").getAttribute("class").contains("disabled"));
     }
 
+    @Description("Validate that exports can be generated and deleted")
     @Test(priority = 7)
     public void verifyThatExportsCanBeGeneratedAndDeleted() {
         String intialCount = payrollPage.noOfExportsGenerated();
@@ -97,6 +109,7 @@ public class payrollTests {
         Assert.assertTrue(payrollPage.noOfExportsGenerated().equalsIgnoreCase(intialCount));
     }
 
+    @Description("Validate the different month and year in past and future can be selected from Payroll Page")
     @Test(priority = 8, dataProvider = "monthYearDataProvider")
     public void validateThatDifferentMonthAndYearCanBeSelected(String month, String year) {
         payrollPage.selectMonthAndYear(month, year);
@@ -104,6 +117,7 @@ public class payrollTests {
         e2eUtils.waitForElementToHaveText(payrollPage.yearInPageLocator, year);
     }
 
+    @Description("Validate the a warning message is displayed when trying to close a payroll in future period")
     @Test(priority = 9)
     public void validatePayrollClosureWarningMessage() {
         String warningMessage = "Warning, you are trying to close a payroll before the end of the billing period. This is possible, but be aware that attendance and absence data will be incomplete.";
