@@ -39,7 +39,7 @@ public class payrollTests {
     @Test(priority = 1)
     public void loginTest() {
         lPage = new loginPage(driver);
-        lPage.doLogin("svetlanatoday@gmail.com", "Munich0!");
+        lPage.doLogin(System.getProperty("email"), System.getProperty("password"));
         e2eUtils.makeBrowserSleep(2);
         if (e2eUtils.returnElement("//*[contains(text(),'active employees')]").isDisplayed())
             hmePage = new homePage(driver);
