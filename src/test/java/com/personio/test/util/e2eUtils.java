@@ -1,21 +1,60 @@
 package com.personio.test.util;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class e2eUtils {
 
     static private WebDriver driver;
-    public static WebDriver openBrowser(){
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        return driver;
+    private static RemoteWebDriver remoteWebDriver;
+    private static DesiredCapabilities desiredCapabilities;
+    public static WebDriver openBrowser(String browserType){
+        if(System.getProperty("os.name").contains("Windows")){
+            System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"//binary//windows//chromedriver.exe");
+            driver = new ChromeDriver();
+            driver.manage().window().maximize();
+            return driver;
+        }else{
+            System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"//binary//mac//chromedriver");
+            driver = new ChromeDriver();
+            driver.manage().window().maximize();
+            return driver;
+        }
+
+
+        // The below code should work if docker is running.
+//        DesiredCapabilities dr=null;
+//        if(browserType.equals("firefox")){
+//            dr=DesiredCapabilities.firefox();
+//            dr.setBrowserName("firefox");
+//            dr.setPlatform(Platform.ANY);
+//        }else{
+//            dr=DesiredCapabilities.chrome();
+//            dr.setBrowserName("chrome");
+//            dr.setPlatform(Platform.WINDOWS);
+//        }
+//        try{
+//            remoteWebDriver=new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), dr);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        driver =  remoteWebDriver;
+//        return driver;
+    }
+
+    public static void refreshPage(){
+        driver.navigate().refresh();
     }
 
     public static void navigateToUrl(String url){
@@ -42,13 +81,6 @@ public class e2eUtils {
     public static void waitForElementToHaveText(String locator, String text){
         WebDriverWait wait = new WebDriverWait(driver,30);
         wait.until(ExpectedConditions.textToBe(By.xpath(locator),text));
-    }
-
-    public static void clickByIndex(String locator, int index){
-        waitForElementToBePresentOnScreen(driver.findElement(By.xpath(locator)));
-        System.out.println("Iam here now");
-        click(driver.findElements(By.xpath(locator)).get(index));
-        System.out.println("Iam here again ...");
     }
 
     public static void click(WebElement element){

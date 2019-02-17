@@ -9,6 +9,7 @@ import com.personio.test.util.e2eUtils;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class payrollLandingPage {
@@ -90,6 +91,12 @@ public class payrollLandingPage {
 
     public String yearInPageLocator ="//div[@class='uhMEN']//strong[2]";
 
+    @FindBy(xpath = "//div[@class='datepicker-months']/table[@class='table-condensed']//th[@class='prev']")
+    WebElement prevYearButton;
+
+    @FindBy(xpath = "//div[@class='datepicker-months']/table[@class='table-condensed']//th[@class='next']")
+    WebElement nextYearButton;
+
     public boolean validatePayrollLandingPageUI(){
         try{
             e2eUtils.waitForElementToBePresentOnScreen(searchField);
@@ -137,32 +144,20 @@ public class payrollLandingPage {
     }
 
     public void generateExports(){
-        e2eUtils.makeBrowserSleep(2);
         e2eUtils.click(generateExport);
         e2eUtils.waitForElementToBePresentOnScreen(generatedExportsLabel);
         e2eUtils.click(doneButton);
-        e2eUtils.waitForElementToBePresentOnScreen(noOfExportsGenerated);
-    }
-
-    public void overwriteExport(){
-        e2eUtils.makeBrowserSleep(2);
-        e2eUtils.click(generateExport);
-        e2eUtils.waitForElementToBePresentOnScreen(overwriteExportLabel);
-        e2eUtils.waitForElementToBePresentOnScreen(overwriteExportWarning);
-        e2eUtils.click(overwriteButton);
-        e2eUtils.waitForElementToBePresentOnScreen(generatedExportsLabel);
-        e2eUtils.click(doneButton);
+        e2eUtils.refreshPage();
         e2eUtils.waitForElementToBePresentOnScreen(noOfExportsGenerated);
     }
 
     public void deleteGeneratedExports(){
-        e2eUtils.makeBrowserSleep(2);
         e2eUtils.click(noOfExportsGenerated);
         e2eUtils.waitForElementToBePresentOnScreen(deleteGeneratedExports);
         List<WebElement> elements = driver.findElements(By.xpath("//i[@class='fal fa-trash']"));
-        System.out.println("size is "  + elements.size());
         e2eUtils.moveMouseAndClick(elements.get(elements.size()-1));
         e2eUtils.click(doneButton);
+        e2eUtils.refreshPage();
     }
 
     public String noOfExportsGenerated(){
@@ -170,8 +165,22 @@ public class payrollLandingPage {
         return noOfExportsGenerated.getText().trim();
     }
 
-    public void selectMonthAndYear(String month, String year){
+    public void selectMonthAndYear(String monthPassed, String yearPassed){
         e2eUtils.click(calendarPicker);
-        e2eUtils.click(driver.findElement(By.xpath("//div[@class='datepicker-months']//tbody//td/span[contains(text(),'"+month+"')]")));
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        if(Integer.valueOf(yearPassed)>currentYear){
+            e2eUtils.click(nextYearButton);
+        }else if(Integer.valueOf(yearPassed)<currentYear){
+            e2eUtils.click(prevYearButton);
+        }
+        e2eUtils.click(driver.findElement(By.xpath("//div[@class='datepicker-months']//tbody//td/span[contains(text(),'"+monthPassed.trim().substring(0,3)+"')]")));
+    }
+
+    public void closePayroll(){
+        e2eUtils.click(closePayrollButton);
+    }
+
+    public void overwriteExports(){
+        e2eUtils.click(doneButton);
     }
 }
