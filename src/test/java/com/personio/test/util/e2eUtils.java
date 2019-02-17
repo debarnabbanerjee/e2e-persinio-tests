@@ -5,6 +5,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -23,13 +24,17 @@ public class e2eUtils {
     public static WebDriver openBrowser(String browserType) {
         if (System.getProperty("os.name").contains("Windows")) {
             System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "//binary//windows//chromedriver.exe");
-            driver = new ChromeDriver();
-            driver.manage().window().maximize();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("headless");
+            options.addArguments("window-size=1200x600");
+            driver = new ChromeDriver(options);
             return driver;
         } else {
             System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "//binary//mac//chromedriver");
-            driver = new ChromeDriver();
-            driver.manage().window().maximize();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("headless");
+            options.addArguments("window-size=1200x600");
+            driver = new ChromeDriver(options);
             return driver;
         }
 
