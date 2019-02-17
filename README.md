@@ -4,14 +4,10 @@ as in my opinion it is one of the most vital business function areas inside the 
 
 # Prerequisites
 
-Docker needs to be installed
+Docker needs to be installed.
 Maven needs to be installed
 JDK needs to be installed
 
 # Execution Steps
 
-bash start.sh
-
 mvn clean verify
-
-bash stop.sh
